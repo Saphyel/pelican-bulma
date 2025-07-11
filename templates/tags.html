@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Tags - {{ SITENAME }}{% endblock title %}
+
+{% block description %}Todas las etiquetas de {{ SITENAME }}{% endblock description %}
+
+{% block content %}
+<section class="hero is-medium is-warning">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title is-1">
+                <span class="icon is-large">
+                    <i class="fas fa-tags"></i>
+                </span>
+                Etiquetas
+            </h1>
+            <h2 class="subtitle is-3">Explora el contenido por etiquetas</h2>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% if tags %}
+        <!-- Nube de tags -->
+        <div class="content has-text-centered mb-6">
+            <h3 class="title is-4">Nube de etiquetas</h3>
+            <div class="tags is-centered">
+                {% for tag, articles in tags %}
+                <a href="{{ SITEURL }}/{{ tag.url }}" class="tag 
+                    {% if articles|length >= 5 %}is-large is-warning{% elif articles|length >= 3 %}is-medium is-warning is-light{% else %}is-small is-light{% endif %}">
+                    {{ tag }} ({{ articles|length }})
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Lista detallada de tags -->
+        <h3 class="title is-4">Todas las etiquetas</h3>
+        <div class="columns is-multiline">
+            {% for tag, articles in tags %}
+            <div class="column is-half-tablet is-one-third-desktop">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="media">
+                            <div class="media-left">
+                                <figure class="image is-48x48">
+                                    <div class="has-background-warning is-flex is-align-items-center is-justify-content-center" style="width: 48px; height: 48px; border-radius: 50%;">
+                                        <span class="icon has-text-dark">
+                                            <i class="fas fa-tag"></i>
+                                        </span>
+                                    </div>
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <p class="title is-5">
+                                    <a href="{{ SITEURL }}/{{ tag.url }}" class="has-text-dark">
+                                        {{ tag }}
+                                    </a>
+                                </p>
+                                <p class="subtitle is-6 has-text-grey">
+                                    {{ articles|length }} artículo{% if articles|length != 1 %}s{% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="content">
+                            <!-- Mostrar los últimos 2 artículos con esta etiqueta -->
+                            {% if articles %}
+                            <div class="is-size-7 has-text-grey">
+                                <strong>Artículos recientes:</strong>
+                                <ul>
+                                    {% for article in articles[:2] %}
+                                    <li><a href="{{ SITEURL }}/{{ article.url }}">{{ article.title|truncate(40) }}</a></li>
+                                    {% endfor %}
+                                    {% if articles|length > 2 %}
+                                    <li><em>y {{ articles|length - 2 }} más...</em></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="has-text-right">
+                            <a href="{{ SITEURL }}/{{ tag.url }}" class="button is-warning is-small">
+                                Ver todos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% else %}
+        <div class="notification is-info">
+            <p class="has-text-centered">
+                <strong>No hay etiquetas disponibles</strong><br>
+                Las etiquetas aparecerán aquí cuando publiques artículos con etiquetas asignadas.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}

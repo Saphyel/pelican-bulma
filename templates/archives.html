@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Archivo - {{ SITENAME }}{% endblock title %}
+
+{% block description %}Archivo completo de artículos de {{ SITENAME }}{% endblock description %}
+
+{% block content %}
+<section class="hero is-medium is-link">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title is-1">
+                <span class="icon is-large">
+                    <i class="fas fa-archive"></i>
+                </span>
+                Archivo
+            </h1>
+            <h2 class="subtitle is-3">Todos los artículos organizados por fecha</h2>
+        </div>
+    </div>
+</section>
+
+<section class="section">
+    <div class="container">
+        {% regroup dates by date.year as year_group %}
+        
+        {% for year in year_group %}
+        <div class="card mb-6">
+            <header class="card-header">
+                <p class="card-header-title is-size-3">
+                    <span class="icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </span>
+                    {{ year.grouper }}
+                </p>
+            </header>
+            <div class="card-content">
+                {% regroup year.list by date.month as month_group %}
+                
+                {% for month in month_group %}
+                <div class="mb-5">
+                    <h4 class="title is-5 has-text-primary mb-3">
+                        {{ month.list.0.date|date:"F" }}
+                    </h4>
+                    
+                    <div class="columns is-multiline">
+                        {% for article in month.list %}
+                        <div class="column is-half-tablet is-one-third-desktop">
+                            <div class="box">
+                                <article>
+                                    <h5 class="title is-6">
+                                        <a href="{{ SITEURL }}/{{ article.url }}" class="has-text-dark">
+                                            {{ article.title }}
+                                        </a>
+                                    </h5>
+                                    
+                                    <p class="subtitle is-7 has-text-grey mb-2">
+                                        <time datetime="{{ article.date.isoformat() }}">
+                                            {{ article.date.strftime('%d de %B') }}
+                                        </time>
+                                        {% if article.category %}
+                                        en <a href="{{ SITEURL }}/{{ article.category.url }}" class="has-text-primary">{{ article.category }}</a>
+                                        {% endif %}
+                                    </p>
+                                    
+                                    <div class="content is-small">
+                                        {{ article.summary|striptags|truncate(100) }}
+                                    </div>
+                                    
+                                    {% if article.tags %}
+                                    <div class="tags">
+                                        {% for tag in article.tags %}
+                                        <a href="{{ SITEURL }}/{{ tag.url }}" class="tag is-small is-light">{{ tag }}</a>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </article>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        
+        {% if not dates %}
+        <div class="notification is-info">
+            <p class="has-text-centered">
+                <strong>No hay artículos en el archivo</strong><br>
+                Los artículos aparecerán aquí cuando comiences a publicar contenido.
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock content %}

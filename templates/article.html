@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}{{ article.title|striptags }} - {{ SITENAME }}{% endblock title %}
+
+{% block description %}{{ article.summary|striptags|truncate(160) }}{% endblock description %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8-desktop is-10-tablet">
+                <article class="content">
+                    <header class="has-text-centered mb-6">
+                        <h1 class="title is-2">{{ article.title }}</h1>
+                        
+                        <div class="subtitle is-6 has-text-grey">
+                            <time datetime="{{ article.date.isoformat() }}">
+                                {{ article.locale_date }}
+                            </time>
+                            {% if article.author %}
+                            por <span class="has-text-weight-semibold">{{ article.author }}</span>
+                            {% endif %}
+                            {% if article.category %}
+                            en <a href="{{ SITEURL }}/{{ article.category.url }}" class="has-text-primary">{{ article.category }}</a>
+                            {% endif %}
+                        </div>
+                        
+                        {% if article.tags %}
+                        <div class="tags is-centered mt-4">
+                            {% for tag in article.tags %}
+                            <a href="{{ SITEURL }}/{{ tag.url }}" class="tag is-primary is-light">{{ tag }}</a>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </header>
+                    
+                    <div class="content is-medium">
+                        {{ article.content }}
+                    </div>
+                    
+                    {% if article.modified %}
+                    <footer class="mt-6 has-text-grey is-size-7">
+                        Última actualización: <time datetime="{{ article.modified.isoformat() }}">{{ article.modified.strftime('%d/%m/%Y') }}</time>
+                    </footer>
+                    {% endif %}
+                </article>
+                
+                <!-- Navegación entre artículos -->
+                {% if article.prev_article or article.next_article %}
+                <nav class="level mt-6">
+                    <div class="level-left">
+                        {% if article.prev_article %}
+                        <div class="level-item">
+                            <a href="{{ SITEURL }}/{{ article.prev_article.url }}" class="button is-text">
+                                <span class="icon is-small">
+                                    <i class="fas fa-arrow-left"></i>
+                                </span>
+                                <span>{{ article.prev_article.title|truncate(30) }}</span>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="level-right">
+                        {% if article.next_article %}
+                        <div class="level-item">
+                            <a href="{{ SITEURL }}/{{ article.next_article.url }}" class="button is-text">
+                                <span>{{ article.next_article.title|truncate(30) }}</span>
+                                <span class="icon is-small">
+                                    <i class="fas fa-arrow-right"></i>
+                                </span>
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </nav>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock content %}

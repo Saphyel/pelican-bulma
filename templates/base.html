@@ -80,7 +80,7 @@
                     
                     {% if MENUITEMS %}
                     {% for title, link in MENUITEMS %}
-                    <a class="navbar-item" href="{{ link }}">{{ title }}</a>
+                    <a class="navbar-item" href="{{ SITEURL }}{{ link }}">{{ title }}</a>
                     {% endfor %}
                     {% endif %}
                 </div>

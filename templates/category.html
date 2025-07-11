@@ -1,26 +1,21 @@
 {% extends "base.html" %}
 
-{% block title %}{{ SITENAME }}{% if SITEDESCRIPTION %} - {{ SITEDESCRIPTION }}{% endif %}{% endblock title %}
+{% block title %}{{ category }} - {{ SITENAME }}{% endblock title %}
 
-{% block description %}{{ SITEDESCRIPTION|default(SITENAME) }}{% endblock description %}
+{% block description %}Artículos en la categoría {{ category }}{% endblock description %}
 
 {% block content %}
 <section class="hero is-medium is-primary">
     <div class="hero-body">
         <div class="container">
-            <h1 class="title is-1">{{ SITENAME }}</h1>
-            {% if SITEDESCRIPTION %}
-            <h2 class="subtitle is-3">{{ SITEDESCRIPTION }}</h2>
-            {% endif %}
+            <h1 class="title is-1">{{ category }}</h1>
+            <h2 class="subtitle is-3">{{ articles|length }} artículo{% if articles|length != 1 %}s{% endif %}</h2>
         </div>
     </div>
 </section>
 
 <section class="section">
     <div class="container">
-        {% if articles %}
-        <h2 class="title is-3 has-text-centered mb-6">Últimos artículos</h2>
-        
         <div class="columns is-multiline">
             {% for article in articles_page.object_list %}
             <div class="column is-half-tablet is-one-third-desktop">
@@ -37,9 +32,6 @@
                                     <time datetime="{{ article.date.isoformat() }}">
                                         {{ article.locale_date }}
                                     </time>
-                                    {% if article.category %}
-                                    en <a href="{{ SITEURL }}/{{ article.category.url }}" class="has-text-primary">{{ article.category }}</a>
-                                    {% endif %}
                                 </p>
                             </div>
                         </div>
@@ -88,15 +80,6 @@
                 {% endfor %}
             </ul>
         </nav>
-        {% endif %}
-        
-        {% else %}
-        <div class="notification is-info">
-            <p class="has-text-centered">
-                <strong>¡Bienvenido!</strong><br>
-                Aún no hay artículos publicados. Crea tu primer artículo para comenzar.
-            </p>
-        </div>
         {% endif %}
     </div>
 </section>
